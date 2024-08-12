@@ -1,0 +1,34 @@
+<!-- templates/recommendations.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommendations</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Movie Recommendations</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Score</th>
+                    <th>Title</th>
+                    <th>Genres</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for index, row in similar_movies.iterrows() %}
+                    <tr>
+                        <td>{{ row['score'] }}</td>
+                        <td>{{ row['title'] }}</td>
+                        <td>{{ row['genres'] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
