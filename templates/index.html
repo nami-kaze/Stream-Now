@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Movie Recommendation System</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: #f4f7fc;
+        color: #333;
+        margin: 0;
+        padding: 0;
+      }
+
+      h1 {
+        text-align: center;
+        color: #333;
+        padding: 20px;
+        background-color: #5c6bc0;
+        margin: 0;
+        font-size: 2rem;
+        text-transform: uppercase;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 30px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      label {
+        font-size: 1.1rem;
+        color: #444;
+      }
+
+      input[type="text"] {
+        padding: 10px;
+        font-size: 1rem;
+        border: 2px solid #ddd;
+        border-radius: 4px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      button {
+        padding: 12px 20px;
+        font-size: 1rem;
+        color: #fff;
+        background-color: #5c6bc0;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      button:hover {
+        background-color: #3f51b5;
+      }
+
+      #recommendation-heading {
+        margin-top: 30px;
+        font-size: 1.5rem;
+        color: #333;
+        font-weight: bold;
+        text-align: center;
+      }
+
+      #recommendations {
+        list-style-type: none;
+        padding: 0;
+        margin-top: 10px;
+      }
+
+      #recommendations li {
+        background-color: #e8f0fe;
+        padding: 10px;
+        margin-bottom: 8px;
+        border-radius: 5px;
+        font-size: 1.1rem;
+        color: #333;
+      }
+
+      #recommendations li:nth-child(even) {
+        background-color: #c5cae9;
+      }
+
+      .error-message {
+        color: #e74c3c;
+        font-weight: bold;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Movie Recommendation System</h1>
+    <div class="container">
+      <form id="movie-form">
+        <label for="movie_name">Enter Movie Name:</label>
+        <input type="text" id="movie_name" name="movie_name" required />
+        <button type="submit">Get Recommendations</button>
+      </form>
+      <h2 id="recommendation-heading" style="display: none">
+        Recommendations:
+      </h2>
+      <ul id="recommendations"></ul>
+    </div>
+
+    <script>
+      document
+        .getElementById("movie-form")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault();
+          const movieName = document.getElementById("movie_name").value;
+
+          // Show recommendations heading
+          document.getElementById("recommendation-heading").style.display =
+            "block";
+
+          try {
+            const response = await fetch(
+              `/recommend?movie_name=${encodeURIComponent(movieName)}`
+            );
+            const data = await response.json();
+            const recommendationsList =
+              document.getElementById("recommendations");
+            recommendationsList.innerHTML = "";
+
+            if (data.recommendations) {
+              data.recommendations.forEach((rec) => {
+                const li = document.createElement("li");
+                li.textContent = `${rec.Title}`;
+                recommendationsList.appendChild(li);
+              });
+            } else {
+              recommendationsList.innerHTML = `<li class="error-message">${
+                data.error || data.message || "No recommendations found."
+              }</li>`;
+            }
+          } catch (error) {
+            document.getElementById(
+              "recommendations"
+            ).innerHTML = `<li class="error-message">An error occurred, please try again later.</li>`;
+          }
+        });
+    </script>
+  </body>
+</html>
